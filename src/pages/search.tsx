@@ -1,54 +1,64 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Search = () => {
+  const [searchedYojijukugo, setSearchedYojijukugo] = useState('')
+
+  const handleSearch = (event, formData) => {
+    event.preventDefault()
+    setSearchedYojijukugo(formData.yojijukugo)
+  }
+
   return (
     <>
       <h1>完全一致検索</h1>
       <h2>検索したい四字熟語を四文字の漢字で入力してください。</h2>
       <div>
-        <MyForm />
+        <YojijukugoForm handleSearch={handleSearch} />
       </div>
       <div>
         <p>
           <Link to='/all-yojijukugo-DB/'>トップに戻る</Link>
         </p>
       </div>
+      {/* 検索ボタンが押されたら結果を表示する */}
+      {searchedYojijukugo && (
+        <div>
+          <p>ID: {0}</p>
+          <p>四字熟語: {searchedYojijukugo}</p>
+        </div>
+      )}
     </>
   )
 }
 
 export default Search
 
-function MyForm() {
+function YojijukugoForm({ handleSearch }) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-  });
+    yojijukugo: '',
+  })
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = event.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    // フォームの送信処理を行う
-    console.log(formData); // 例として、コンソールにフォームデータを表示
-  };
+    handleSearch(event, formData)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         <input
-          type="text"
-          name="yojijukugo"
-          value={formData.firstName}
+          type='text'
+          name='yojijukugo'
+          value={formData.yojijukugo}
           onChange={handleChange}
         />
       </label>
-      <button type="submit">検索</button>
+      <button type='submit'>検索</button>
     </form>
-  );
+  )
 }
