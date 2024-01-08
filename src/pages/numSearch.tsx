@@ -12,18 +12,16 @@ const NumSearch = () => {
       alert(
         '入力されたIDが正しくありません。1~20,816,369,750,016の数字で入力してください。',
       )
-      return;
+      return
     }
-    setSearchedYojijukugoId(formData.yojijukugoId);
-    setSearchedYojijukugo(getYojijukugoById(formData.yojijukugoId));
+    setSearchedYojijukugoId(formData.yojijukugoId)
+    setSearchedYojijukugo(getYojijukugoById(formData.yojijukugoId))
   }
 
   return (
     <>
       <h1>ID検索</h1>
-      <h2>
-        検索したい四字熟語のIDを入力してください。
-      </h2>
+      <h2>検索したい四字熟語のIDを入力してください。</h2>
       <div>
         <IdForm handleSearch={handleSearch} />
       </div>
@@ -75,30 +73,43 @@ function IdForm({ handleSearch }) {
 }
 
 interface joyokanji {
-  kanjiId: number,
-  kanji: string,
+  kanjiId: number
+  kanji: string
 }
 
-const joyokanjiArray: joyokanji[] = Object.keys(joyokanjis).map((key: string) => ({
-  kanjiId: parseInt(key),
-  kanji: joyokanjis[key],
-}))
+const joyokanjiArray: joyokanji[] = Object.keys(joyokanjis).map(
+  (key: string) => ({
+    kanjiId: parseInt(key),
+    kanji: joyokanjis[key],
+  }),
+)
 
 function AssertYojijukugoId(yojijukugoId: number): boolean {
   if (1 <= yojijukugoId && yojijukugoId <= joyokanjiArray.length ** 4) {
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 
 function getYojijukugoById(yojijukugoId: number): string {
   const kanjiIds = [
     Math.floor((yojijukugoId - 1) / joyokanjiArray.length ** 3) + 1,
-    Math.floor((yojijukugoId - 1) % joyokanjiArray.length ** 3 / joyokanjiArray.length ** 2) + 1,
-    Math.floor((yojijukugoId - 1) % joyokanjiArray.length ** 2 / joyokanjiArray.length) + 1,
+    Math.floor(
+      ((yojijukugoId - 1) % joyokanjiArray.length ** 3) /
+        joyokanjiArray.length ** 2,
+    ) + 1,
+    Math.floor(
+      ((yojijukugoId - 1) % joyokanjiArray.length ** 2) / joyokanjiArray.length,
+    ) + 1,
     Math.floor((yojijukugoId - 1) % joyokanjiArray.length) + 1,
   ]
-  const yojijukugo = kanjiIds.map((kanjiId) => joyokanjiArray.find((joyokanji) => joyokanji.kanjiId === kanjiId)!.kanji).join('')
-  return yojijukugo;
+  const yojijukugo = kanjiIds
+    .map(
+      (kanjiId) =>
+        joyokanjiArray.find((joyokanji) => joyokanji.kanjiId === kanjiId)!
+          .kanji,
+    )
+    .join('')
+  return yojijukugo
 }

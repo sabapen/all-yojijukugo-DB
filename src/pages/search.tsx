@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import joyokanjis from '../references/joyokanji.json'
-import { get } from 'http'
 
 const Search = () => {
   const [searchedYojijukugo, setSearchedYojijukugo] = useState('')
@@ -10,11 +9,13 @@ const Search = () => {
   const handleSearch = (event, formData) => {
     event.preventDefault()
     if (!AssertYojijukugo(formData.yojijukugo)) {
-      alert('入力された四字熟語が正しくありません。常用漢字四文字で入力してください。')
-      return;
+      alert(
+        '入力された四字熟語が正しくありません。常用漢字四文字で入力してください。',
+      )
+      return
     }
     setSearchedYojijukugo(formData.yojijukugo)
-    setSearchedYojijukugoId(getYojijukugoId(formData.yojijukugo));
+    setSearchedYojijukugoId(getYojijukugoId(formData.yojijukugo))
   }
 
   return (
@@ -74,38 +75,43 @@ function YojijukugoForm({ handleSearch }) {
 }
 
 interface joyokanji {
-  kanjiId: number,
-  kanji: string,
+  kanjiId: number
+  kanji: string
 }
 
-const joyokanjiArray: joyokanji[] = Object.keys(joyokanjis).map((key: string) => ({
-  kanjiId: parseInt(key),
-  kanji: joyokanjis[key],
-}))
+const joyokanjiArray: joyokanji[] = Object.keys(joyokanjis).map(
+  (key: string) => ({
+    kanjiId: parseInt(key),
+    kanji: joyokanjis[key],
+  }),
+)
 
 function AssertYojijukugo(yojijukugo: string): boolean {
   const str = [...yojijukugo]
   // 四字熟語は四文字であること
   if (str.length !== 4) {
-    return false;
+    return false
   }
   // 常用漢字であること
   for (let i = 0; i < str.length; i++) {
     if (!joyokanjiArray.some((joyokanji) => joyokanji.kanji === str[i])) {
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }
 
 function getYojijukugoId(yojijukugo: string): number {
   const str = [...yojijukugo]
-  const kanjiIds = str.map((kanji) => joyokanjiArray.find((joyokanji) => joyokanji.kanji === kanji)!.kanjiId)
+  const kanjiIds = str.map(
+    (kanji) =>
+      joyokanjiArray.find((joyokanji) => joyokanji.kanji === kanji)!.kanjiId,
+  )
   const yojijukugoId =
     (kanjiIds[0] - 1) * joyokanjiArray.length ** 3 +
     (kanjiIds[1] - 1) * joyokanjiArray.length ** 2 +
     (kanjiIds[2] - 1) * joyokanjiArray.length +
-    (kanjiIds[3] - 1)
-    + 1;
-  return yojijukugoId;
+    (kanjiIds[3] - 1) +
+    1
+  return yojijukugoId
 }
